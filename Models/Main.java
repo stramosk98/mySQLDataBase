@@ -55,11 +55,13 @@ public class Main {
     	Column idPedido = new Column();
     	idPedido.setName("idPedido");
     	idPedido.setType(ColumnType.INT);
+    	idPedido.setPk(true);
     	idPedido.setFk(new ForeignKey(produto, produtoId));
     	
     	Column idProduto = new Column();
     	idProduto.setName("idProduto");
     	idProduto.setType(ColumnType.INT);
+    	idProduto.setPk(true);
     	idProduto.setFk(new ForeignKey(pedido, pedidoId));
     	
     	Table pedidoProduto = new Table("pedido_produto");

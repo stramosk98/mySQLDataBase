@@ -57,8 +57,8 @@ public class Database {
 
 	    for (int i = 0; i < tableList.size(); i++) {
 	        Table table = tableList.get(i);
-	        String pk = "";
 	        StringBuilder fk = new StringBuilder();
+	        ArrayList<String> pks = new ArrayList<String>();
 	        int count = 0;
 	        query.append("CREATE TABLE IF NOT EXISTS ").append(name).append(".").append(table.getTableName()).append(" (\n");
 
@@ -75,7 +75,7 @@ public class Database {
 	            }
 
 	            if (column.getPk()) {
-	                pk = "\tPRIMARY KEY (" + column.getName() + ")";
+	                pks.add(column.getName());
 	            }
 
 	            if (column.getFk() != null) {
@@ -91,14 +91,26 @@ public class Database {
 	                count++;
 	            }
 
-	            if (j < table.getColumnList().size() - 1 || pk != "" || fk.toString() != "") {
+	            if (j < table.getColumnList().size() - 1 || pks.size() > 0 || fk.toString() != "") {
 	                query.append(",\n");
 	            } else {
 	                query.append("\n");
 	            }
 	        }
-
-	        query.append(pk);
+	        
+	        if (pks.size() > 0) {
+	        	query.append("\tPRIMARY KEY (");
+		        for (int k = 0; k < pks.size(); k++) {
+		        	query.append(pks.get(k));
+		        	if(k < pks.size() -1) {
+		        		query.append(", ");
+		        	} else if(fk.toString() != "") {
+		        		query.append("),\n");
+		        	} else {
+		        		query.append(")\n");
+		        	}
+		        }
+	        }
 	        query.append(fk);
 	        query.append("\n) ENGINE = InnoDB;\n");
 	    }
